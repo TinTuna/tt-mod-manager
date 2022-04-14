@@ -1,3 +1,6 @@
 /dist/
-/build/
+/py/build/
 *.pyc
+*.spec
+__pycache__
+*.exe
