@@ -10,6 +10,9 @@ See the readme for installation [here](https://docs.google.com/document/d/1PtGA_
 To build from the git repo:
 
 ```bash
+pwd
+# ./py/
+
 pyinstaller --distpath ../py -F .\main.py
 ```
 
