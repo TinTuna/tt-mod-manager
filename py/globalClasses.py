@@ -1,5 +1,35 @@
 import tkinter as tk
 
+class Page:
+    def __init__(self, root):
+        self.frame_canvas = tk.Frame(root)
+    def hide(self):
+        self.frame_canvas.grid_forget()
+    def show(self):
+        self.frame_canvas.grid()
+
+class Ship:
+    def __init__(self, mod, name, included, weight ):
+        self.mod = mod
+        self.name = name
+        self.included = included
+        self.weight = weight
+    def __getattr__(self, item):
+        return super().__getattribute__(item)
+    def __setattr__(self, att_name, value):
+        super().__setattr__(att_name, value)
+
+class ShipData:
+    def __init__(self, derelict, police, scav, random):
+        self.derelict = derelict
+        self.police = police
+        self.scav = scav
+        self.random = random
+    def __getattr__(self, item):
+        return super().__getattribute__(item)
+    def __setattr__(self, att_name, value):
+        super().__setattr__(att_name, value)
+
 class Table:
     def __init__(self, table, lst):
         total_rows = len(lst)

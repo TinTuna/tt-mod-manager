@@ -1,16 +1,6 @@
 import os
 import json
-
-class Ship:
-    def __init__(self, mod, name, included, weight ):
-        self.mod = mod
-        self.name = name
-        self.included = included
-        self.weight = weight
-    def __getattr__(self, item):
-        return super().__getattribute__(item)
-    def __setattr__(self, att_name, value):
-        super().__setattr__(att_name, value)
+import globalClasses
 
 def loadShipData():
     ships = []
@@ -19,7 +9,7 @@ def loadShipData():
         if '\data\ships' in dirName:
             for fileName in fileList:
                 if '.json' in fileName:
-                    ships.append(Ship(dirName[6:-11], fileName[0:-5], 0, 0))
+                    ships.append(globalClasses.Ship(dirName[6:-11], fileName[0:-5], 0, 0))
 
     with open('../../../StreamingAssets/data/loot/loot.json') as fp:
         data = json.load(fp)
@@ -40,11 +30,10 @@ def loadShipData():
                     else:
                         shipData[1] = round((1 - total), 4)
                     baseGameShipsObject.append(
-                        Ship('BaseGame', shipData[0], 1, shipData[1]))
+                        globalClasses.Ship('BaseGame', shipData[0], 1, shipData[1]))
         fp.close()
-
-    test = ships + baseGameShipsObject
-    return test
+        
+    return ships + baseGameShipsObject
 
 
 def saveChanges(lst):

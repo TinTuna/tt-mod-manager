@@ -1,9 +1,12 @@
 import tkinter as tk
-import structure
-import ships
+import globalClasses
+import useHelperFunctions
+import pageStructs.shipListPage as shipListPage
+
+useHelperFunctions.loadShipData()
 
 root = tk.Tk()
-# root.resizable(False, False)
+root.resizable(False, False)
 root.title('Ostranouts Ship Manager')
 root.grid_rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
@@ -13,54 +16,60 @@ frame_main.grid(sticky='news')
 
 # header
 header = tk.Label(frame_main,
-    text="Ostranouts Ship Manager",
-    fg="white",
-    bg="black",
-    width=25,
-    height=2
-)
+                  text="Ostranouts Ship Manager",
+                  fg="white",
+                  bg="black",
+                  width=25,
+                  height=2
+                  )
 header.grid(row=1, column=0, pady=(0, 10), sticky='ew')
 
-## table
+navigation_buttons_frame = tk.Frame(frame_main)
+navigation_buttons_frame.grid(row=2, column=0, pady=(0, 10), sticky='ew')
 
-# Create a frame for the canvas with non-zero row&column weights
-frame_canvas = tk.Frame(frame_main)
-frame_canvas.grid(row=2, column=0, pady=(5, 0), sticky='nw')
-frame_canvas.grid_rowconfigure(0, weight=1)
-frame_canvas.grid_columnconfigure(0, weight=1)
-# Set grid_propagate to False to allow 5-by-5 buttons resizing later
-frame_canvas.grid_propagate(False)
+# pages
 
-# Add a canvas in that frame
-canvas = tk.Canvas(frame_canvas)
-canvas.grid(row=0, column=0, sticky="news")
+page_wrapper = tk.Frame(frame_main)
+page_wrapper.grid(row=3, column=0, pady=(0, 10), sticky='ew')
 
-# Link a scrollbar to the canvas
-vsb = tk.Scrollbar(frame_canvas, orient="vertical", command=canvas.yview)
-vsb.grid(row=0, column=1, sticky='ns')
-canvas.configure(yscrollcommand=vsb.set)
+main_page = globalClasses.Page(page_wrapper)
+ship_derelict_page = shipListPage.ShipListPage(
+    page_wrapper, useHelperFunctions.loadShipData())
+ship_derelict_page.show()
+ship_police_page = shipListPage.ShipListPage(page_wrapper, [])
+ship_scav_page = shipListPage.ShipListPage(page_wrapper, [])
+ship_random_page = shipListPage.ShipListPage(page_wrapper, [])
+ship_derelict_page.hide()
+ship_police_page.hide()
+ship_scav_page.hide()
+ship_random_page.hide()
 
-# Create a frame to contain the buttons
-frame_table = tk.Frame(canvas)
-canvas.create_window((0, 0), window=frame_table, anchor='nw')
+# navigation buttons
 
-# load data
-lst = ships.loadShipData()
+def togglePage(page):
+    main_page.hide()
+    ship_derelict_page.hide()
+    ship_police_page.hide()
+    ship_scav_page.hide()
+    ship_random_page.hide()
 
-# build table
-t = structure.Table(frame_table, lst)
+    match page:
+        case 'derelict':
+            ship_derelict_page.show()
+        case 'police':
+            ship_police_page.show()
+        case _:
+            main_page.show()
 
-frame_table.update_idletasks()
-
-frame_canvas.config(width=frame_table.winfo_width() + vsb.winfo_width(), height=500)
-canvas.config(scrollregion=canvas.bbox("all"))
-
-## footer
-footer = tk.Button(frame_main,
-    text="Save changes",
-    command= lambda: ships.saveChanges(lst)
-)
-footer.grid(row=3, column=0, pady=(10, 10))
+mainPageBtn = tk.Button(navigation_buttons_frame,
+                        text="Main Page", command=lambda: togglePage('main'))
+derelictPageBtn = tk.Button(
+    navigation_buttons_frame, text="Derelict Ships", command=lambda: togglePage('derelict'))
+policePageBtn = tk.Button(navigation_buttons_frame,
+                          text="Police Ships", command=lambda: togglePage('police'))
+mainPageBtn.grid(row=0, column=0, sticky='ew')
+derelictPageBtn.grid(row=0, column=1, sticky='ew')
+policePageBtn.grid(row=0, column=2, sticky='ew')
 
 # execute
 root.mainloop()
