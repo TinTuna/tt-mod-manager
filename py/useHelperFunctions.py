@@ -2,7 +2,23 @@ import os
 import json
 import globalClasses
 
-def loadShipData():
+def resolveShipType(shipType):
+    match shipType:
+        case 'derelict':
+            return 'RandomDerelict'
+        case 'police':
+            return 'RandomPoliceShip'
+        case 'scav':
+            return 'RandomScavShip'
+        case 'random':
+            return 'RandomShip'
+        case _:
+            print('What are you doing Rob?')
+            return
+
+def loadShipData(shipType):
+    shipType = resolveShipType(shipType)
+    if not shipType: return
     ships = []
 
     for dirName, subdirList, fileList in os.walk('../../'):
@@ -16,7 +32,7 @@ def loadShipData():
 
         for item in data:
             # Following code is derpy as hell :( - Will fix later
-            if item.get('strName') == 'RandomDerelict':
+            if item.get('strName') == shipType:
                 baseGameShipsRAW = item.get('aCOs')[0].split("|")
                 length = len(baseGameShipsRAW)
                 baseGameShipsObject = []
@@ -32,11 +48,13 @@ def loadShipData():
                     baseGameShipsObject.append(
                         globalClasses.Ship('BaseGame', shipData[0], 1, shipData[1]))
         fp.close()
-        
+
     return ships + baseGameShipsObject
 
 
-def saveChanges(lst):
+def saveChanges(lst, shipType):
+    shipType = resolveShipType(shipType)
+    if not shipType: return
     # convert values to percentages of 1.0
     total = 0
     for ship in lst:
@@ -59,7 +77,7 @@ def saveChanges(lst):
     with open('../data/loot/loot.json') as fp:
         data = json.load(fp)
         for item in data:
-            if item.get('strName') == 'RandomDerelict':
+            if item.get('strName') == shipType:
                 item['aCOs'] = shipJsonString
         fp.close()
 

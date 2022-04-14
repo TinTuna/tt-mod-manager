@@ -3,7 +3,7 @@ import globalClasses
 import useHelperFunctions
 import pageStructs.shipListPage as shipListPage
 
-useHelperFunctions.loadShipData()
+# useHelperFunctions.loadShipData()
 
 root = tk.Tk()
 root.resizable(False, False)
@@ -34,11 +34,11 @@ page_wrapper.grid(row=3, column=0, pady=(0, 10), sticky='ew')
 
 main_page = globalClasses.Page(page_wrapper)
 ship_derelict_page = shipListPage.ShipListPage(
-    page_wrapper, useHelperFunctions.loadShipData())
+    page_wrapper, useHelperFunctions.loadShipData('derelict'))
 ship_derelict_page.show()
-ship_police_page = shipListPage.ShipListPage(page_wrapper, [])
-ship_scav_page = shipListPage.ShipListPage(page_wrapper, [])
-ship_random_page = shipListPage.ShipListPage(page_wrapper, [])
+ship_police_page = shipListPage.ShipListPage(page_wrapper, useHelperFunctions.loadShipData('police'))
+ship_scav_page = shipListPage.ShipListPage(page_wrapper, useHelperFunctions.loadShipData('scav'))
+ship_random_page = shipListPage.ShipListPage(page_wrapper, useHelperFunctions.loadShipData('random'))
 ship_derelict_page.hide()
 ship_police_page.hide()
 ship_scav_page.hide()
@@ -58,18 +58,28 @@ def togglePage(page):
             ship_derelict_page.show()
         case 'police':
             ship_police_page.show()
+        case 'scav':
+            ship_scav_page.show()
+        case 'random':
+            ship_random_page.show()
         case _:
             main_page.show()
 
-mainPageBtn = tk.Button(navigation_buttons_frame,
+main_page_btn = tk.Button(navigation_buttons_frame,
                         text="Main Page", command=lambda: togglePage('main'))
-derelictPageBtn = tk.Button(
+derelict_page_btn = tk.Button(
     navigation_buttons_frame, text="Derelict Ships", command=lambda: togglePage('derelict'))
-policePageBtn = tk.Button(navigation_buttons_frame,
+police_page_btn = tk.Button(navigation_buttons_frame,
                           text="Police Ships", command=lambda: togglePage('police'))
-mainPageBtn.grid(row=0, column=0, sticky='ew')
-derelictPageBtn.grid(row=0, column=1, sticky='ew')
-policePageBtn.grid(row=0, column=2, sticky='ew')
+scav_page_btn = tk.Button(
+    navigation_buttons_frame, text="Scav Ships", command=lambda: togglePage('scav'))
+random_page_btn = tk.Button(navigation_buttons_frame,
+                          text="Random Ships", command=lambda: togglePage('random'))
+main_page_btn.grid(row=0, column=0, sticky='ew')
+derelict_page_btn.grid(row=0, column=1, sticky='ew')
+police_page_btn.grid(row=0, column=2, sticky='ew')
+scav_page_btn.grid(row=0, column=3, sticky='ew')
+random_page_btn.grid(row=0, column=4, sticky='ew')
 
 # execute
 root.mainloop()

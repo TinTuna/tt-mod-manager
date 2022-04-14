@@ -53,12 +53,12 @@ class Table:
                     lst[i].__setattr__(headerKey, tk.IntVar(value=shipInstanceValue))
                     self.e = tk.Checkbutton(
                         table, variable=lst[i].__getattr__(headerKey), onvalue=1, offvalue=0)
-                    self.e.grid(row=i+1, column=j, padx=(2, 2))
+                    self.e.grid(row=i+1, column=j)
                 elif headerKey == 'weight':
                     lst[i].__setattr__(headerKey, tk.IntVar(value=shipInstanceValue))
                     self.e = tk.Entry(
                         table, textvariable=lst[i].__getattr__(headerKey), justify='center')
-                    self.e.grid(row=i+1, column=j, padx=(2, 2))
+                    self.e.grid(row=i+1, column=j)
                 else:
                     self.e = tk.Label(table, text=shipInstanceValue)
-                    self.e.grid(row=i+1, column=j, padx=(2, 2))
+                    self.e.grid(row=i+1, column=j)

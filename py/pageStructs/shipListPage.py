@@ -10,14 +10,14 @@ class ShipListPage(globalClasses.Page):
         ## table
 
         self.frame_canvas = tk.Frame(root)
-        self.frame_canvas.grid(row=2, column=0, pady=(10, 10), sticky='nw')
+        self.frame_canvas.grid(row=2, column=0, sticky='nw')
         self.frame_canvas.grid_rowconfigure(0, weight=1)
         self.frame_canvas.grid_columnconfigure(0, weight=1)
         self.frame_canvas.grid_propagate(False)
 
         # Add a canvas
         canvas = tk.Canvas(self.frame_canvas)
-        canvas.grid(row=0, column=0, sticky="news")
+        canvas.grid(row=0, column=0, padx=(5,5), sticky="news")
 
         # Link a scrollbar to the canvas
         vsb = tk.Scrollbar(self.frame_canvas, orient="vertical",
@@ -35,14 +35,16 @@ class ShipListPage(globalClasses.Page):
         frame_table.update_idletasks()
 
         self.frame_canvas.config(width=frame_table.winfo_width() +
-                            vsb.winfo_width(), height=500)
+                            vsb.winfo_width(), height=600)
         canvas.config(scrollregion=canvas.bbox("all"))
 
         # footer
-        footer = tk.Button(self.frame_canvas,
+        footer = tk.Frame(self.frame_canvas)
+        footer.grid(row=3, column=0, pady=(10, 10))
+        save_button = tk.Button(footer,
                            text="Save changes",
                            command=lambda: useHelperFunctions.saveChanges(
                                self._ship_list)
                            )
-        footer.grid(row=3, column=0, pady=(10, 10))
+        save_button.grid(row=0, column=0)
 
