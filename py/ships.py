@@ -14,13 +14,13 @@ def loadShipData():
     #     if '.json' in fileName:
     #         ships.append({'baseGame': fileName[0:-5]})
 
-    for dirName, subdirList, fileList in os.walk('../../../../'):
+    for dirName, subdirList, fileList in os.walk('../../'):
         if '\data\ships' in dirName:
             for fileName in fileList:
                 if '.json' in fileName:
                     ships.append([dirName[9:-11], fileName[0:-5], 0, 0])
 
-    with open('../../../../../StreamingAssets/data/loot/loot.json') as fp:
+    with open('../../../StreamingAssets/data/loot/loot.json') as fp:
         data = json.load(fp)
 
         for item in data:
@@ -64,14 +64,14 @@ def saveChanges(lst):
             shipJsonString += shipValueString
     shipJsonString = shipJsonString[0:-1]
 
-    with open('../../../data/loot/loot.json') as fp:
+    with open('../data/loot/loot.json') as fp:
         data = json.load(fp)
         for item in data:
             if item.get('strName') == 'RandomDerelict':
                 item['aCOs'] = shipJsonString
         fp.close()
 
-    with open('../../../data/loot/loot.json', 'w') as fp:
+    with open('../data/loot/loot.json', 'w') as fp:
         json.dump(data, fp)
         fp.close()
     
