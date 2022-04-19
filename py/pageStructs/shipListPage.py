@@ -1,9 +1,9 @@
 import tkinter as tk
-import globalClasses
+from classes.Page import Page
+from classes.Table import Table
 import useHelperFunctions
 
-
-class ShipListPage(globalClasses.Page):
+class ShipListPage(Page):
     def __init__(self, root, shipList, pageType):
         self._ship_list = shipList
 
@@ -30,7 +30,7 @@ class ShipListPage(globalClasses.Page):
         canvas.create_window((0, 0), window=frame_table, anchor='nw')
 
         # build table
-        t = globalClasses.Table(frame_table, self._ship_list)
+        t = Table(frame_table, self._ship_list)
 
         frame_table.update_idletasks()
 

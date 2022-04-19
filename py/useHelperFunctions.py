@@ -1,6 +1,6 @@
 import os
 import json
-import globalClasses
+from classes.Ship import Ship
 from tkinter.messagebox import showinfo
 
 def throwError(errorText):
@@ -31,7 +31,7 @@ def loadShipData(shipType):
         if '\data\ships' in dirName:
             for fileName in fileList:
                 if '.json' in fileName:
-                    ships.append(globalClasses.Ship(
+                    ships.append(Ship(
                         dirName[6:-11], fileName[0:-5], 0, 0))
 
     with open('../../../StreamingAssets/data/loot/loot.json') as fp:
@@ -53,7 +53,7 @@ def loadShipData(shipType):
                     else:
                         shipData[1] = round((1 - total), 4)
                     baseGameShipsObject.append(
-                        globalClasses.Ship('BaseGame', shipData[0], 1, shipData[1]))
+                        Ship('BaseGame', shipData[0], 1, shipData[1]))
         fp.close()
 
     return ships + baseGameShipsObject

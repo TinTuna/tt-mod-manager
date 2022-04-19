@@ -1,0 +1,10 @@
+class ShipData:
+    def __init__(self, derelict, police, scav, random):
+        self.derelict = derelict
+        self.police = police
+        self.scav = scav
+        self.random = random
+    def __getattr__(self, item):
+        return super().__getattribute__(item)
+    def __setattr__(self, att_name, value):
+        super().__setattr__(att_name, value)
