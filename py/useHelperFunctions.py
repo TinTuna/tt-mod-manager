@@ -149,4 +149,3 @@ def checkLoadOrder(enabledModsList):
     with open('../../loading_order.json', 'w') as fp:
         json.dump(data, fp)
         fp.close()
-
