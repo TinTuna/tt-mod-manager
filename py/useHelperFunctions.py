@@ -39,8 +39,8 @@ def loadShipData(shipType):
 
         for item in data:
             # Following code is derpy as hell :( - Will fix later
-            if item.get('strName') == shipType:
-                baseGameShipsRAW = item.get('aCOs')[0].split("|")
+            if item['strName'] == shipType:
+                baseGameShipsRAW = item['aCOs'][0].split("|")
                 length = len(baseGameShipsRAW)
                 baseGameShipsObject = []
                 count = 0
@@ -93,7 +93,7 @@ def saveChanges(lst, shipType):
             shipJsonString = ''
             for ship in lst:
                 shipValueString = ship.__getattr__(
-                    'name') + '=' + str(ship.__getattr__('weight')) + 'x1,'
+                    'name') + '=' + str(ship.__getattr__('weight')) + 'x1|'
                 shipJsonString += shipValueString
             shipJsonString = shipJsonString[0:-1]
         else:
@@ -103,7 +103,7 @@ def saveChanges(lst, shipType):
         with open('../data/loot/loot.json') as fp:
             data = json.load(fp)
             for item in data:
-                if item.get('strName') == shipType:
+                if item['strName'] == shipType:
                     item['aCOs'] = shipJsonString
             fp.close()
 
@@ -128,7 +128,7 @@ def checkLoadOrder(enabledModsList):
     with open('../../loading_order.json') as fp:
         data = json.load(fp)
         for item in data:
-                if item.get('strName') == 'Mod Loading Order':
+                if item['strName'] == 'Mod Loading Order':
                     loadOrder = item['aLoadOrder']
                     # remove tt-mod-loader if present
                     for entry in loadOrder:
