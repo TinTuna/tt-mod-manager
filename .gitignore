@@ -4,4 +4,4 @@
 *.spec
 __pycache__
 *.exe
-py/testing.py
+/data/

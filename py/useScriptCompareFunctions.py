@@ -26,7 +26,7 @@ def compareDicts(json_1, json_2):
                     item_1['aCOs'] = resolvedClash
                     print('Resolved ' + item_1['strName'] + ' clash')
                     
-    return[clashLevel, json_1, clashArr]
+    return {'level': clashLevel, 'json': json_1, 'clashArray': clashArr}
 
 def resolveStringClash(arr_1, arr_2):
     # Three different possible situations here:

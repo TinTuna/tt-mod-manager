@@ -1,3 +1,4 @@
+from fnmatch import fnmatch
 import os
 import json
 from classes.Ship import Ship
@@ -149,3 +150,15 @@ def checkLoadOrder(enabledModsList):
     with open('../../loading_order.json', 'w') as fp:
         json.dump(data, fp)
         fp.close()
+
+def getTouchedJSONsFromMods():
+    mods = {}
+
+    for dirName, subdirList, fileList in os.walk('../../'):
+        jsonFiles = fnmatch.filter(fileList, '*.json')
+        if len(jsonFiles) > 0:
+            modName = dirName.split('/')[2]
+            modifiedDir = '/' + dirName[(7+len(modName)):len(dirName)]
+            if modName not in mods:
+                mods[modName] = {}
+                mods[modName][modifiedDir] = jsonFiles
