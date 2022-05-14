@@ -57,10 +57,10 @@ class Mod_Table:
                     self.e = tk.Checkbutton(
                         table, variable=lst[i].__getattr__(headerKey), onvalue=1, offvalue=0)
                     self.e.grid(row=i+1, column=j)
-                elif headerKey == 'weight':
+                elif headerKey == 'clash':
                     lst[i].__setattr__(headerKey, tk.DoubleVar(value=modInstanceValue))
-                    self.e = tk.Entry(
-                        table, textvariable=lst[i].__getattr__(headerKey), justify='center')
+                    self.e = tk.Label(
+                        table, text='OK ' + u'\u2713', justify='center')
                     self.e.grid(row=i+1, column=j)
                 else:
                     self.e = tk.Label(table, text=modInstanceValue)

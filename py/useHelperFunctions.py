@@ -138,8 +138,9 @@ def saveShipChanges(lst, shipType):
         showinfo('Success', shipType.capitalize() + ' ships saved')
 
         # extract mods enabled
-        enabledModsList = list(filter(lambda x: x.__getattr__('mod') != 'BaseGame', lst))
-        
+        enabledModsList = []
+        for ship in list(filter(lambda x: x.__getattr__('mod') != 'BaseGame', lst)):
+            enabledModsList.append(ship.mod)
         # update loading_order.json
         checkLoadOrder(enabledModsList)
 
@@ -199,7 +200,7 @@ def saveModChanges(mods: list[Mod]):
         enabledModsList = []
         for mod in mods:
             if mod.included.get():
-                enabledModsList.append(mod.name)
+                enabledModsList.append(mod.pathName)
         checkLoadOrder(enabledModsList)
 
         showinfo('Success', 'loading_order.json updated')

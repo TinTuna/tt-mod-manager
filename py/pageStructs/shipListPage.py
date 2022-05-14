@@ -8,7 +8,6 @@ class ShipListPage(Page):
         self._ship_list = shipList
 
         ## table
-
         self.frame_canvas = tk.Frame(root)
         self.frame_canvas.grid(row=2, column=0, sticky='nw')
         self.frame_canvas.grid_rowconfigure(0, weight=1)
@@ -43,7 +42,7 @@ class ShipListPage(Page):
         footer.grid(row=3, column=0, pady=(10, 10))
         save_button = tk.Button(footer,
                            text="Save changes",
-                           command=lambda: useHelperFunctions.saveChanges(
+                           command=lambda: useHelperFunctions.saveShipChanges(
                                self._ship_list, pageType)
                            )
         save_button.grid(row=0, column=0)
