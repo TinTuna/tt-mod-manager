@@ -15,27 +15,28 @@ class ShipListPage(Page):
         self.frame_canvas.grid_propagate(False)
 
         # Add a canvas
-        canvas = tk.Canvas(self.frame_canvas)
-        canvas.grid(row=0, column=0, padx=(5,5), sticky="news")
+        self.canvas = tk.Canvas(self.frame_canvas)
+        self.canvas.grid(row=0, column=0, padx=(5,0), sticky="news")
+        
 
         # Link a scrollbar to the canvas
-        vsb = tk.Scrollbar(self.frame_canvas, orient="vertical",
-                           command=canvas.yview)
-        vsb.grid(row=0, column=1, sticky='ns')
-        canvas.configure(yscrollcommand=vsb.set)
+        self.vsb = tk.Scrollbar(self.frame_canvas, orient="vertical",
+                           command=self.canvas.yview)
+        self.vsb.grid(row=0, column=1, sticky='ns')
+        self.canvas.configure(yscrollcommand=self.vsb.set)
 
         # Create a frame to contain the table
-        frame_table = tk.Frame(canvas)
-        canvas.create_window((0, 0), window=frame_table, anchor='nw')
+        self.frame_table = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.frame_table, anchor='nw')
 
         # build table
-        t = Ship_Table(frame_table, self._ship_list)
+        t = Ship_Table(self.frame_table, self._ship_list)
 
-        frame_table.update_idletasks()
+        self.frame_table.update_idletasks()
 
-        self.frame_canvas.config(width=frame_table.winfo_width() +
-                            vsb.winfo_width(), height=600)
-        canvas.config(scrollregion=canvas.bbox("all"))
+        self.frame_canvas.config(width=self.frame_table.winfo_width() +
+                            self.vsb.winfo_width(), height=600)
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
 
         # footer
         footer = tk.Frame(self.frame_canvas)
@@ -46,4 +47,11 @@ class ShipListPage(Page):
                                self._ship_list, pageType)
                            )
         save_button.grid(row=0, column=0)
+    
+    def update(self):
+        width = self.frame_table.winfo_width() + self.vsb.winfo_width()
+        height = 600
+        # self.frame_canvas.config(width=width, height=height)
+        self.canvas.config(width=width, height=height)
+
 
