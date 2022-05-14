@@ -1,8 +1,12 @@
-from fnmatch import fnmatch
 import os
 import json
-from classes.Ship import Ship
+import fnmatch
 from tkinter.messagebox import showinfo
+from unicodedata import name
+from classes.Ship import Ship
+from classes.Mod import Mod
+from classes.localLoadedJSON import localLoadedJSON
+from processModJSONFiles import rollup_mods
 
 def throwError(errorText):
     showinfo('Failure', 'An error occurred - ' + errorText[0])
@@ -18,9 +22,27 @@ def resolveShipType(shipType):
         case 'random':
             return 'RandomShip'
         case _:
-            print('What are you doing Rob?')
+            print('¯\_(ツ)_/¯')
             return
 
+def loadModData():
+    loadOrderArr: list = localLoadedJSON('../../loading_order.json').data[0]['aLoadOrder']
+    mods: list[Mod] = []
+
+    for dirName, subdirList, fileList in os.walk('../../'):
+        for fileName in fileList:
+            if fileName == 'mod_info.json':
+                modJSON: dict[str, str] = localLoadedJSON(dirName + '\mod_info.json').data[0]
+                if modJSON['strName'] == 'tt-mod-manager': continue
+                pathName = dirName[6:]
+                mods.append(Mod(modJSON['strName'], pathName, modJSON['strAuthor'], modJSON['strName'] in loadOrderArr, [], False))
+
+    # compute files touched by mods
+    touchedFiles = getTouchedJSONsFromMods()
+    for mod in mods:
+        mod.files_touched = touchedFiles[mod.pathName]
+        
+    return mods
 
 def loadShipData(shipType):
     shipType = resolveShipType(shipType)
@@ -60,7 +82,7 @@ def loadShipData(shipType):
     return ships + baseGameShipsObject
 
 
-def saveChanges(lst, shipType):
+def saveShipChanges(lst, shipType):
     try:
         shipType = resolveShipType(shipType)
         if not shipType:
@@ -125,26 +147,26 @@ def saveChanges(lst, shipType):
     except ValueError as error:
         throwError(error.args)
 
-def checkLoadOrder(enabledModsList):
+def checkLoadOrder(enabledModsList: list[str]):
     with open('../../loading_order.json') as fp:
         data = json.load(fp)
         for item in data:
                 if item['strName'] == 'Mod Loading Order':
-                    loadOrder = item['aLoadOrder']
+                    loadOrder: list[str] = ["core"]
                     # remove tt-mod-loader if present
-                    for entry in loadOrder:
-                        if entry == 'tt-mod-manager':
-                            loadOrder.remove('tt-mod-manager')
+                    # for entry in loadOrder:
+                    #     if entry == 'tt-mod-manager':
+                    #         loadOrder.remove('tt-mod-manager')
 
                     # add any new mods not in the mod load order
                     for mod in enabledModsList:
-                        modName = mod.__getattr__('mod')
-                        if modName not in loadOrder: loadOrder.append(modName)
+                        if mod not in loadOrder: loadOrder.append(mod)
 
                     # put the mod manager on the end
                     loadOrder.append('tt-mod-manager')
 
                     # replace list in data
+                    print(loadOrder)
                     item['aLoadOrder'] = loadOrder
 
     with open('../../loading_order.json', 'w') as fp:
@@ -153,12 +175,33 @@ def checkLoadOrder(enabledModsList):
 
 def getTouchedJSONsFromMods():
     mods = {}
-
     for dirName, subdirList, fileList in os.walk('../../'):
         jsonFiles = fnmatch.filter(fileList, '*.json')
+        dirName = dirName.replace('\\', '/')
         if len(jsonFiles) > 0:
             modName = dirName.split('/')[2]
+            if modName == '': continue 
             modifiedDir = '/' + dirName[(7+len(modName)):len(dirName)]
+            if '/data/ships' in modifiedDir: continue
             if modName not in mods:
                 mods[modName] = {}
-                mods[modName][modifiedDir] = jsonFiles
+            mods[modName][modifiedDir] = jsonFiles
+    return mods
+
+def saveModChanges(mods: list[Mod]):
+    try:
+        # combine all mod jsons
+        rollup_mods(mods)
+
+        showinfo('Success', 'Mod JSONs merged')
+
+        # update loading_order.json
+        enabledModsList = []
+        for mod in mods:
+            if mod.included.get():
+                enabledModsList.append(mod.name)
+        checkLoadOrder(enabledModsList)
+
+        showinfo('Success', 'loading_order.json updated')
+    except ValueError as error:
+        throwError(error.args)

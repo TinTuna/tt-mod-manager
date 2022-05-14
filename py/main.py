@@ -1,7 +1,9 @@
 import tkinter as tk
 import useHelperFunctions
-from classes.Page import Page
 import pageStructs.shipListPage as shipListPage
+
+from pageStructs.mainPage import MainPage
+from classes.Page import Page
 
 root = tk.Tk()
 root.resizable(False, False)
@@ -30,7 +32,7 @@ navigation_buttons_frame.grid(row=2, column=0, pady=(0, 10), sticky='ew')
 page_wrapper = tk.Frame(frame_main)
 page_wrapper.grid(row=3, column=0, pady=(0, 10), sticky='ew')
 
-main_page = Page(page_wrapper)
+main_page = MainPage(page_wrapper)
 ship_derelict_page = shipListPage.ShipListPage(
     page_wrapper, useHelperFunctions.loadShipData('derelict'), 'derelict')
 ship_police_page = shipListPage.ShipListPage(page_wrapper, useHelperFunctions.loadShipData('police'), 'police')

@@ -17,6 +17,8 @@ def compareDicts(json_1, json_2):
             if item_1['strName'] == item_2['strName']:
                 print('Entry duplicate ' + item_1['strName'])
                 if clashLevel < 1: clashLevel = 1
+                print('-------------------')
+                print(item_1, item_2)
                 if item_1['aCOs'] != item_2['aCOs']:
                     if clashLevel < 2: clashLevel = 2
                     clashArr.append(item_1['strName'])

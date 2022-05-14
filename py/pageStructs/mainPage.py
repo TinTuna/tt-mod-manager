@@ -1,15 +1,13 @@
 import tkinter as tk
-from classes.Page import Page
-from classes.Table import Table
 import useHelperFunctions
-
+from classes.Page import Page
+from classes.Table import Mod_Table
 
 class MainPage(Page): # WIP front page / mod clash / enable disable
-    def __init__(self, root, shipList, pageType):
-        self._ship_list = shipList
+    def __init__(self, root):
+        self._mod_list = useHelperFunctions.loadModData()
 
         ## table
-
         self.frame_canvas = tk.Frame(root)
         self.frame_canvas.grid(row=2, column=0, sticky='nw')
         self.frame_canvas.grid_rowconfigure(0, weight=1)
@@ -31,7 +29,7 @@ class MainPage(Page): # WIP front page / mod clash / enable disable
         canvas.create_window((0, 0), window=frame_table, anchor='nw')
 
         # build table
-        t = Table(frame_table, self._ship_list)
+        t = Mod_Table(frame_table, self._mod_list)
 
         frame_table.update_idletasks()
 
@@ -43,9 +41,9 @@ class MainPage(Page): # WIP front page / mod clash / enable disable
         footer = tk.Frame(self.frame_canvas)
         footer.grid(row=3, column=0, pady=(10, 10))
         save_button = tk.Button(footer,
-                           text="Save changes",
-                           command=lambda: useHelperFunctions.saveChanges(
-                               self._ship_list, pageType)
+                           text="Combine enabled mods",
+                           command=lambda: useHelperFunctions.saveModChanges(
+                               self._mod_list)
                            )
         save_button.grid(row=0, column=0)
 

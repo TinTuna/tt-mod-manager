@@ -2,12 +2,12 @@ import shutil
 import useScriptCompareFunctions
 import json
 import os
-import fnmatch
+from classes.Mod import Mod
 
 def get_json(path):
   with open(path) as fp:
     jsonDump = json.load(fp)
-    fp.close() # force file stream closed, not sure its necessary but /shrug
+    fp.close() # force file stream closed, not sure its necessary but ¯\_(ツ)_/¯
     return jsonDump
 
 def merge_mod_info(modInfoPath):
@@ -24,7 +24,7 @@ def process_mod_file_structure(mod, modJSONPaths):
   for path in modJSONPaths:
     for file in modJSONPaths[path]:
       compiledLocalPath = localPathRoute + path + '/'
-      compiledModPath = modPathRoute + mod  + path + '/'
+      compiledModPath = modPathRoute + mod + path + '/'
       if file == 'mod_info.json':
         merge_mod_info(compiledModPath + file)
         continue
@@ -46,26 +46,9 @@ def process_mod_file_structure(mod, modJSONPaths):
           fp.close()
     
 
-def get_touched_JSONs_from_mods(enabled):
-  mods = {}
-  for dirName, subdirList, fileList in os.walk('../../'):
-    jsonFiles = fnmatch.filter(fileList, '*.json')
-    if len(jsonFiles) > 0:
-      modName = dirName.split('/')[2]
-      for mod in enabled:
-        if mod == modName:
-          modifiedDir = '/' + dirName[(7+len(modName)):len(dirName)]
-          if modName not in mods:
-            mods[modName] = {}
-          mods[modName][modifiedDir] = jsonFiles
-  return mods
-
-def rollup_mods(mod_files_list):
+def rollup_mods(mod_files_list: list[Mod]):
   clean_working_dir()
 
   for mod in mod_files_list:
-    process_mod_file_structure(mod, mod_files_list[mod])
+    process_mod_file_structure(mod.pathName, mod.files_touched)
 
-modsTouchedFiles = get_touched_JSONs_from_mods(['CrusoeThreads', 'CrusoeYamSeng', 'Old Conduits'])
-
-rollup_mods(modsTouchedFiles)

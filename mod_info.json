@@ -1,10 +1,10 @@
 [
   {
-    "strName": "tt-ship-manager",
+    "strName": "tt-mod-manager",
     "strAuthor": "TinTuna",
     "strModURL": "https://bluebottlegames.com/games/ostranauts",
     "strGameVersion": "0.8.0.0",
     "strModVersion": "0.1",
-    "strNotes": "Ship Mod Manager"
+    "strNotes": "Mod Manager"
   }
 ]
