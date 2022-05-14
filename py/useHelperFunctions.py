@@ -69,12 +69,18 @@ def loadShipData(shipType):
         return
     ships = []
 
-    for dirName, subdirList, fileList in os.walk('../../'):
-        if '\data\ships' in dirName:
-            for fileName in fileList:
-                if '.json' in fileName:
-                    ships.append(Ship(
-                        dirName[6:-11], fileName[0:-5], 0, 0))
+    # this sequence checks that the mod is only in the immidiate first leve after /mods/. Uses 'mod_info.json' as a signal.
+    for dir in os.listdir('../../'):
+        localDir = '../../'+dir
+        if os.path.isdir(localDir):
+            for file in os.listdir(localDir):
+                if file == 'mod_info.json':
+                    for dirName, subdirList, fileList in os.walk(localDir):
+                        if '\data\ships' in dirName:
+                            for fileName in fileList:
+                                if '.json' in fileName:
+                                    ships.append(Ship(
+                                        dir, fileName[0:-5], 0, 0))
 
     with open('../../../StreamingAssets/data/loot/loot.json') as fp:
         data = json.load(fp)
@@ -142,6 +148,16 @@ def saveShipChanges(lst, shipType):
             raise ValueError('Selected ships must be more than one')
 
         # open loot file, grab data and replace with new ship data
+        if not os.path.exists('../data/loot/loot.json'):
+            os.makedirs('../data/loot/')
+            with open('../../../StreamingAssets/data/loot/loot.json') as fp:
+                originalLoot = json.load(fp)
+                fp.close()
+            
+            with open('../data/loot/loot.json', 'w+') as fp:
+                json.dump(originalLoot, fp)
+                fp.close()
+
         with open('../data/loot/loot.json') as fp:
             data = json.load(fp)
             for item in data:
