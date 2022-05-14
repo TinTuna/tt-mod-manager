@@ -21,6 +21,12 @@ def clean_working_dir():
 def process_mod_file_structure(mod, modJSONPaths):
   modPathRoute = '../../'
   localPathRoute = '..'
+
+  # create the mandatory ships dir
+  if not os.path.exists('../data/ships'):
+    os.makedirs('../data/ships')
+
+  # process all json files
   for path in modJSONPaths:
     for file in modJSONPaths[path]:
       compiledLocalPath = localPathRoute + path + '/'
@@ -31,19 +37,24 @@ def process_mod_file_structure(mod, modJSONPaths):
       modJson = get_json(compiledModPath + file)
       if os.path.exists(compiledLocalPath + file):
         # print('it exists!')
+        # print(compiledLocalPath + file)
         existingJSON = get_json(compiledLocalPath + file)
-        mergedJSON = useScriptCompareFunctions.compareDicts(existingJSON, modJson)
+        mergedJSON = useScriptCompareFunctions.compareDicts(existingJSON, modJson, file)
         if mergedJSON['level'] != 3:
           with open(compiledLocalPath + file, 'w') as fp:
             json.dump(mergedJSON['json'], fp)
             fp.close()
       else:
         # print('it doenst exist!')
+        # print(compiledLocalPath + file)
         if not os.path.exists(compiledLocalPath):
           os.makedirs(compiledLocalPath)
         with open(compiledLocalPath + file, 'w+') as fp:
           json.dump(modJson, fp)
           fp.close()
+  
+  
+  
     
 
 def rollup_mods(mod_files_list: list[Mod]):

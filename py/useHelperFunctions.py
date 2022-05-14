@@ -167,7 +167,6 @@ def checkLoadOrder(enabledModsList: list[str]):
                     loadOrder.append('tt-mod-manager')
 
                     # replace list in data
-                    print(loadOrder)
                     item['aLoadOrder'] = loadOrder
 
     with open('../../loading_order.json', 'w') as fp:

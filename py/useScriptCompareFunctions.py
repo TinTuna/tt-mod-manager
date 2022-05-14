@@ -1,6 +1,7 @@
+from tkinter.messagebox import showinfo
 from classes.itemEntry import itemEntry
 
-def compareDicts(json_1, json_2):
+def compareDicts(json_1, json_2, fileName):
     # Takes 2 Dictionaries
     # Returns success code and reformed array
     # specified to values where key of identifier is strName
@@ -12,13 +13,19 @@ def compareDicts(json_1, json_2):
     clashLevel = 0
     clashArr = []
 
+    if 'OutfitDress01' in json_1:
+        print(json_1['OutfitDress01'])
+
     for item_1 in json_1:
         for item_2 in json_2:
+            
             if item_1['strName'] == item_2['strName']:
                 print('Entry duplicate ' + item_1['strName'])
                 if clashLevel < 1: clashLevel = 1
-                print('-------------------')
-                print(item_1, item_2)
+                if 'aCOs' not in item_1 or 'aCOs' not in item_2:
+                    print(item_1['strName'] + ' is not a combineable object')
+                    showinfo('Warning - ' + fileName, item_1['strName'] + ' is not a combineable object \n\nValue not replaced')
+                    continue
                 if item_1['aCOs'] != item_2['aCOs']:
                     if clashLevel < 2: clashLevel = 2
                     clashArr.append(item_1['strName'])
